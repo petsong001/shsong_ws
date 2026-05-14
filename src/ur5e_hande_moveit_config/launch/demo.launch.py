@@ -1,0 +1,10 @@
+from moveit_configs_utils import MoveItConfigsBuilder
+from moveit_configs_utils.launches import generate_demo_launch
+
+
+def generate_launch_description():
+    moveit_config = MoveItConfigsBuilder("ur5e_hande", package_name="ur5e_hande_moveit_config").to_moveit_configs()
+    
+    # 💥 THE FIX IS HERE 💥
+    # Setting use_fake_hardware=False tells MoveIt not to launch the fake joint state publisher.
+    return generate_demo_launch(moveit_config, use_fake_hardware=False)

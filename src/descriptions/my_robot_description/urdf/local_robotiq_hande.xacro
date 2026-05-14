@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="local_hande_gripper" params="prefix parent">
+    
+    <link name="${prefix}hande_base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://robotiq_hande_description/meshes/hand-e.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://robotiq_hande_description/meshes/hand-e.dae" scale="1 1 1"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}hande_base_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}hande_base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="${prefix}hande_left_finger">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_hande_description/meshes/finger_1.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_hande_description/meshes/finger_1.dae" scale="1 1 1"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}hande_right_finger">
+      <visual>
+        <geometry>
+          <mesh filename="package://robotiq_hande_description/meshes/finger_2.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://robotiq_hande_description/meshes/finger_2.dae" scale="1 1 1"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}hande_left_finger_joint" type="prismatic">
+      <parent link="${prefix}hande_base_link"/>
+      <child link="${prefix}hande_left_finger"/>
+      <origin xyz="0 0 0.099" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0.0" upper="0.025" effort="130" velocity="0.15"/>
+    </joint>
+
+    <joint name="${prefix}hande_right_finger_joint" type="prismatic">
+      <parent link="${prefix}hande_base_link"/>
+      <child link="${prefix}hande_right_finger"/>
+      <origin xyz="0 0 0.099" rpy="0 0 0"/>
+      <axis xyz="0 0 -1"/>
+      <limit lower="0.0" upper="0.025" effort="130" velocity="0.15"/>
+      <mimic joint="${prefix}hande_left_finger_joint" multiplier="1" offset="0"/>
+    </joint>
+
+  </xacro:macro>
+</robot>

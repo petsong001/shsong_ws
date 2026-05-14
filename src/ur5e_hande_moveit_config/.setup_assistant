@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: my_robot_description
+    relative_path: urdf/ur5e_hande.urdf.xacro
+  srdf:
+    relative_path: config/ur5e_hande.srdf
+  package_settings:
+    author_name: iAR
+    author_email: iAR@todo.todo
+    generated_timestamp: 1764368218
