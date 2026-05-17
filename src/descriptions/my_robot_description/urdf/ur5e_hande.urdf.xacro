@@ -9,6 +9,12 @@
   
   <xacro:arg name="use_isaac_sim" default="false"/>
 
+  <xacro:arg name="robot_ip" default="192.168.1.100"/>
+  <xacro:arg name="reverse_ip" default="192.168.1.102"/>
+  <xacro:arg name="script_filename" default="to_be_filled_by_ur_robot_driver"/>
+  <xacro:arg name="input_recipe_filename" default="to_be_filled_by_ur_robot_driver"/>
+  <xacro:arg name="output_recipe_filename" default="to_be_filled_by_ur_robot_driver"/>
+
   <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
   <xacro:include filename="$(find robotiq_hande_description)/urdf/robotiq_hande_gripper.xacro"/>
 
@@ -24,27 +30,28 @@
     visual_parameters_file="$(find ur_description)/config/ur5e/visual_parameters.yaml" 
     use_fake_hardware="$(arg use_fake_hardware)" 
     sim_gazebo="false" 
+    robot_ip="$(arg robot_ip)"
+    reverse_ip="$(arg reverse_ip)"
+    script_filename="$(arg script_filename)"
+    input_recipe_filename="$(arg input_recipe_filename)"
+    output_recipe_filename="$(arg output_recipe_filename)"
     initial_positions="${dict(shoulder_pan_joint=0.0,shoulder_lift_joint=-1.57,elbow_joint=0.0,wrist_1_joint=-1.57,wrist_2_joint=0.0,wrist_3_joint=0.0)}">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:ur_robot>
 
-  <xacro:hande_gripper name="hande_gripper" parent="tool0" prefix="robotiq_" use_fake_hardware="$(arg use_fake_hardware)"/>
-
-  <xacro:if value="$(arg use_isaac_sim)">
-    <ros2_control name="IsaacSimGripperInterface" type="system">
-      <hardware>
-        <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-        <param name="joint_commands_topic">/joint_commands</param>
-        <param name="joint_states_topic">/joint_states</param>
-      </hardware>
-      
-      <joint name="robotiq_hande_left_finger_joint">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-    </ros2_control>
-  </xacro:if>
+  <xacro:robotiq_hande_gripper 
+    name="hande_gripper" 
+    prefix="" 
+    parent="tool0" 
+    grip_pos_min="0.0"
+    grip_pos_max="0.025"
+    tty_port="/tmp/ttyTool"
+    baudrate="115200"
+    parity="0"
+    data_bits="8"
+    stop_bit="1"
+    slave_id="9"
+    use_fake_hardware="$(arg use_fake_hardware)" />
 
   <link name="camera_depth_optical_frame"/>
   <joint name="tripod_camera_joint" type="fixed">

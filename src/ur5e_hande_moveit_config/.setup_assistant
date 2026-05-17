@@ -5,6 +5,21 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/ur5e_hande.srdf
   package_settings:
-    author_name: iAR
-    author_email: iAR@todo.todo
-    generated_timestamp: 1764368218
+    author_name: Peter Song
+    author_email: pet.song001@gmail.com
+    generated_timestamp: 1762470633
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

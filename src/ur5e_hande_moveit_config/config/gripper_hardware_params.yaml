@@ -1,7 +1,0 @@
-gripper_control_node:
-  ros__parameters:
-    # CRITICAL: Define parameters under the Node name (gripper_control_node)
-    # The driver reads these parameters *globally* for its hardware definition.
-    RobotiqGripperHardwareInterface:
-      com_port: /tmp/ttyTool
-      baud_rate: 115200

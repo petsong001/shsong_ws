@@ -29,24 +29,19 @@ def generate_launch_description():
         MoveItConfigsBuilder("ur5e_hande", package_name=moveit_pkg)
         .robot_description_semantic(file_path="config/ur5e_hande.srdf")
         .robot_description_kinematics(file_path="config/kinematics.yaml")
-        
-        # --- FIX: Point to the REAL ROBOT controller config ---
         .trajectory_execution(file_path="config/moveit_controllers_real.yaml")
-        
-        .planning_pipelines(pipelines=["ompl", "chomp", "pilz_industrial_motion_planner"])
+        .planning_pipelines(pipelines=["ompl"])
         .to_moveit_configs()
     )
 
-    # Convert to dict and add the missing Controller Manager parameter
     move_group_params = moveit_config.to_dict()
     move_group_params.update(robot_description)
     
-    # --- Explicitly define the controller manager to prevent Segfault ---
+    # Explicitly define the controller manager
     move_group_params.update({
         "moveit_controller_manager": "moveit_simple_controller_manager/MoveItSimpleControllerManager",
         "moveit_manage_controllers": True,
     })
-    # -----------------------------------------------------------------------
 
     move_group_node = Node(
         package="moveit_ros_move_group",
@@ -73,18 +68,8 @@ def generate_launch_description():
             {"use_sim_time": False},
         ],
     )
-
-    # Only spawn the Arm Controller. 
-    # NOTE: Ensure this name matches the YAML file below
-    spawn_arm = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["scaled_joint_trajectory_controller", "-c", "/controller_manager"],
-        output="screen",
-    )
     
     return LaunchDescription([
         move_group_node,
         rviz_node,
-        spawn_arm,
     ])
